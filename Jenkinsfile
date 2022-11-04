@@ -20,27 +20,13 @@ node {
                    step([$class: 'JUnitResultArchiver', testResults:
                      '**/target/surefire-reports/TEST-*UnitTest.xml'])
                 }
-            }, 'Integration tests': {
-                stage("Runing integration tests") {
-                    try {
-                        sh "./mvnw test -Pintegration"
-                    } catch(err) {
-                        step([$class: 'JUnitResultArchiver', testResults:
-                          '**/target/surefire-reports/TEST-'
-                            + '*IntegrationTest.xml'])
-                        throw err
-                    }
-                    step([$class: 'JUnitResultArchiver', testResults:
-                      '**/target/surefire-reports/TEST-'
-                        + '*IntegrationTest.xml'])
-                }
             }
 
-            stage("Staging") {
-                sh "pid=\$(lsof -i:8989 -t); kill -TERM \$pid "
+            stage("Deployment") {
+                sh "pid=\$(lsof -i:8001 -t); kill -TERM \$pid "
                   + "|| kill -KILL \$pid"
                 withEnv(['JENKINS_NODE_COOKIE=dontkill']) {
-                    sh 'nohup ./mvnw spring-boot:run -Dserver.port=8989 &'
+                    sh 'nohup ./mvnw spring-boot:run -Dserver.port=8001 &'
                 }
             }
         }
