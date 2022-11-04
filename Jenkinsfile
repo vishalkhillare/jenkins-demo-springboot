@@ -10,15 +10,7 @@ node {
         stage("Tests and Deployment") {
             parallel 'Unit tests': {
                 stage("Runing unit tests") {
-                    try {
-                        sh "./mvnw test -Punit"
-                    } catch(err) {
-                        step([$class: 'JUnitResultArchiver', testResults:
-                          '**/target/surefire-reports/TEST-*UnitTest.xml'])
-                        throw err
-                    }
-                   step([$class: 'JUnitResultArchiver', testResults:
-                     '**/target/surefire-reports/TEST-*UnitTest.xml'])
+                    sh "./mvnw test -Punit"
                 }
             }
 
@@ -26,5 +18,5 @@ node {
                 sh 'nohup ./mvnw spring-boot:run -Dserver.port=8001 &'
             }
         }
-    
+
 }
