@@ -9,8 +9,3 @@ target/
 *.iws
 *.iml
 *.ipr
-
-### MAVEN ###
-.mvn/
-mvnw
-mvnw.cmd
